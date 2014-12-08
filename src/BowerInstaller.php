@@ -84,19 +84,11 @@ class BowerInstaller extends LibraryInstaller
 			foreach ($extra['bower-asset-main'] as $file) {
 				$extension = pathinfo($file,  PATHINFO_EXTENSION);
 				if (strtolower($extension) == 'css') {
-					$css[] = 
+					$css[] = $file;
+				} elseif (strtolower($extension) == 'js') {
+					$scripts[] = $file;
 				}
 			}
-    			$scripts = array_map(function($script) use ($targetDir) {
-    				return $targetDir.'/'.$script;
-    			}, $extra['bower-asset-main']);
-    		}
-    	
-    		$css = [];
-    		if (isset($extra['component']['styles'])) {
-    			$css = array_map(function($script) use ($packageName, $baseUrl) {
-    				return $targetDir.'/'.$script;
-    			}, $extra['component']['styles']);
     		}
     	
     		$deps = [];
