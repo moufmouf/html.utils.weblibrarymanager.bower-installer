@@ -1,0 +1,38 @@
+{
+	"name" : "mouf/html.utils.weblibrarymanager.bower-installer",
+	"description" : "This Mouf package contains a Composer installer that will automatically create WebLibrary instances when a 'bower' package is installed in Composer. It is designed to be used only with Mouf's WebLibraryManager. Bower compatibility provided thanks to francoispluchino/composer-asset-plugin",
+	"keywords" : [
+		"html",
+		"javascript",
+		"css",
+		"dependency",
+		"dependencies",
+		"mouf",
+		"bower"
+	],
+	"homepage" : "http://mouf-php/packages/mouf/html.utils.weblibrarymanager.bower-installer",
+	"support" : {
+		"issues" : "https://github.com/thecodingmachine/html.utils.weblibrarymanager.bower-installer/issues"
+	},
+	"type" : "composer-plugin",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "David Négrier",
+			"email" : "d.negrier@thecodingmachine.com",
+			"homepage" : "http://mouf-php.com"
+		}
+	],
+	"require" : {
+		"php" : ">=5.3.0",
+		"composer-plugin-api" : "1.0.0",
+		"mouf/html.utils.weblibrarymanager" : "~2.1 | ~3.0"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Mouf\\Html\\Utils\\WebLibraryManager\\BowerInstaller\\" : "src/"
+		}
+	},
+	"extra" : {
+		"class" : "Mouf\\Html\\Utils\\WebLibraryManager\\BowerInstaller\\BowerInstallerPlugin"
+	}
+}
