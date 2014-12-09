@@ -1,5 +1,5 @@
 <?php
-namespace Mouf\Html\Utils\WebLibraryManager\ComponentInstaller;
+namespace Mouf\Html\Utils\WebLibraryManager\BowerInstaller;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
