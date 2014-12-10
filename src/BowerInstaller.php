@@ -7,6 +7,7 @@ use Composer\Repository\InstalledRepositoryInterface;
 use Mouf\MoufManager;
 use Mouf\Html\Utils\WebLibraryManager\WebLibraryInstaller;
 use Composer\Config;
+use Composer\Package\RootPackageInterface;
 
 /**
  * This Composer installer is in charge of the installation of bower files in the Mouf framework.
@@ -28,7 +29,10 @@ class BowerInstaller extends LibraryInstaller
 		require_once(__DIR__.'/../../../../mouf/Mouf.php');
 		
 		$moufManager = MoufManager::getMoufManager();
-		self::installBowerPackage($target, $this->composer->getConfig(), $moufManager);
+		
+		$rootPackage = $this->composer->getPackage();
+		
+		self::installBowerPackage($target, $this->composer->getConfig(), $moufManager, $rootPackage);
 	}
 		
 	/**
@@ -65,30 +69,40 @@ class BowerInstaller extends LibraryInstaller
      * @param Config $config
      * @param MoufManager $moufManager
      */
-    public static function installBowerPackage(PackageInterface $package, Config $config, $moufManager) {
+    public static function installBowerPackage(PackageInterface $package, Config $config, $moufManager, RootPackageInterface $rootPackage) {
     	if (!$moufManager->has('defaultWebLibraryManager')) {
     		return;
     	}
     	
     	$extra = $package->getExtra();
     	
-	$packageName = explode('/', $package->getName())[1];
+    	$rootExtra = $rootPackage->getExtra();
+    	
+		$packageName = explode('/', $package->getName())[1];
     		
     	if (!$moufManager->has("bower.".$packageName)) {
 
-		$targetDir = 'vendor/'.$package->getName().'/';
-    	
+			if (isset($rootExtra['asset-installer-paths']['bower-asset-library'])) {
+				$targetDir = rtrim($rootExtra['asset-installer-paths']['bower-asset-library'], '/').'/'.$package->getName().'/';
+			} else {
+				$targetDir = 'vendor/'.$package->getName().'/';
+			}
+			
     		$scripts = [];
     		$css = [];
     		if (isset($extra['bower-asset-main'])) {
-			foreach ($extra['bower-asset-main'] as $file) {
-				$extension = pathinfo($file,  PATHINFO_EXTENSION);
-				if (strtolower($extension) == 'css') {
-					$css[] = $file;
-				} elseif (strtolower($extension) == 'js') {
-					$scripts[] = $file;
+    			$mainFiles = $extra['bower-asset-main'];
+    			if (!is_array($mainFiles)) {
+    				$mainFiles = [ $mainFiles ];
+    			}
+				foreach ($mainFiles as $file) {
+					$extension = pathinfo($file,  PATHINFO_EXTENSION);
+					if (strtolower($extension) == 'css') {
+						$css[] = $targetDir.$file;
+					} elseif (strtolower($extension) == 'js') {
+						$scripts[] = $targetDir.$file;
+					}
 				}
-			}
     		}
     	
     		$deps = [];
